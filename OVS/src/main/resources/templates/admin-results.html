@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin - Live Results</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+	<style>
+		body {
+			background-color: #f8f9fa;
+			font-size: 0.9rem;
+		}
+
+		.navbar {
+			background-color: #212529 !important;
+			border-bottom: 3px solid #ffc107;
+		}
+
+		.nav-link {
+			font-weight: 500;
+			transition: 0.3s;
+		}
+
+		.active-nav {
+			border-bottom: 2px solid #ffc107;
+			color: #fff !important;
+		}
+
+		.card {
+			border: none;
+			border-radius: 12px;
+		}
+
+		.progress {
+			height: 28px;
+			border-radius: 14px;
+			background-color: #e9ecef;
+		}
+
+		.progress-bar {
+			font-weight: bold;
+			font-size: 0.85rem;
+		}
+
+		.winner-border {
+			border: 2px solid #ffc107 !important;
+		}
+	</style>
+</head>
+<bodybody>
+
+	<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow-sm mb-4">
+		<div class="container">
+			<a class="navbar-brand fw-bold" th:href="@{/admin/users}">
+				<i class="bi bi-shield-lock-fill me-2"></i>OVS Admin Panel
+			</a>
+			<div class="collapse navbar-collapse" id="adminNav">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link text-white" th:href="@{/admin/users}"><i class="bi bi-people me-1"></i>User
+							List</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link text-white" th:href="@{/admin/add-candidate}">
+							<i class="bi bi-person-plus me-1"></i> Add Candidate
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active-nav text-warning" th:href="@{/admin/results}"><i
+								class="bi bi-bar-chart-line me-1"></i>Live Results</a>
+					</li>
+				</ul>
+				<a th:href="@{/login}" class="btn btn-danger btn-sm">Logout</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container mt-4">
+		<div class="row mb-4 align-items-center">
+			<div class="col-md-6">
+				<h3 class="fw-bold text-dark mb-0">Election Monitoring</h3>
+				<p class="text-muted small">Real-time vote distribution and candidate standings.</p>
+			</div>
+			<div class="col-md-6 text-md-end">
+				<div class="btn-group shadow-sm me-2">
+					<span class="btn btn-dark btn-sm">Total Votes Cast</span>
+					<span class="btn btn-primary btn-sm fw-bold px-3" th:text="${totalVotes}">0</span>
+				</div>
+				<a th:href="@{/admin/reset-election}" class="btn btn-outline-danger btn-sm shadow-sm"
+					onclick="return confirm('CRITICAL: This will wipe all votes and reset user voting status. Continue?')">
+					<i class="bi bi-arrow-clockwise"></i> Reset Election
+				</a>
+			</div>
+		</div>
+
+		<div class="card shadow-sm border-0">
+			<div class="card-header bg-white py-3">
+				<h5 class="mb-0 fw-bold text-primary"><i class="bi bi-trophy me-2"></i>Current Standings</h5>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-hover align-middle mb-0">
+					<thead class="table-light">
+						<tr>
+							<th class="ps-4">Candidate & Party</th>
+							<th class="text-center">Vote Count</th>
+							<th>Percentage Share</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="candidate : ${candidates}">
+							<td class="ps-4">
+								<div class="d-flex align-items-center">
+									<img th:src="@{${candidate.photoPath}}" class="rounded-circle me-3 border"
+										style="width: 45px; height: 45px; object-fit: cover;" alt="Photo">
+									<div>
+										<div class="fw-bold text-dark" th:text="${candidate.candidateName}"></div>
+										<small class="text-muted" th:text="${candidate.partyName}"></small>
+									</div>
+								</div>
+							</td>
+
+							<td class="text-center">
+								<span class="badge bg-success fs-6 px-3 rounded-pill"
+									th:text="${candidate.voteCount}">0</span>
+							</td>
+
+							<td style="width: 40%;">
+								<div class="d-flex align-items-center">
+									<div class="progress flex-grow-1 me-3" style="height: 12px; border-radius: 6px;">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+											role="progressbar"
+											th:style="'width: ' + (${totalVotes > 0} ? (${candidate.voteCount} * 100 / ${totalVotes}) : 0) + '%'">
+										</div>
+									</div>
+									<span class="fw-bold text-dark small"
+										th:text="(${totalVotes > 0} ? (${candidate.voteCount} * 100 / ${totalVotes}) : 0) + '%'">
+									</span>
+								</div>
+							</td>
+						</tr>
+
+						<tr th:if="${#lists.isEmpty(candidates)}">
+							<td colspan="3" class="text-center py-5 text-muted">
+								<i class="bi bi-info-circle fs-2 d-block mb-2"></i>
+								No candidates found. Please add candidates to see results.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	</body>
+</html>
