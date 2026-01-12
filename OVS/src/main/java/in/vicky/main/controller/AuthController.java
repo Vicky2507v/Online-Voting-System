@@ -61,10 +61,10 @@ public class AuthController {
 	    }
 
 	    // 2. User
-	    User user = userRepository.findByEmail(email); // Use findByEmail
+	    User user = userRepository.findByEmail(email); 
 	    if (user != null && user.getPassword().equals(password)) {
 	        session.setAttribute("user", user);
-	        return "redirect:/dashboard"; // REDIRECT is key here
+	        return "redirect:/dashboard"; 
 	    }
 
 	    model.addAttribute("error", "Invalid Credentials");
@@ -130,3 +130,4 @@ public class AuthController {
 	
 
 }
+
