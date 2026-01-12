@@ -51,7 +51,7 @@ public class AuthController {
 		return "login";
 	}
 
-	// Single Unified Process Login
+	
 	@PostMapping("/login")
 	public String processLogin(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
 	    // 1. Admin
@@ -128,4 +128,5 @@ public class AuthController {
 	    return "redirect:/dashboard";
 	}
 	
+
 }
