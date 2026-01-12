@@ -1,5 +1,3 @@
-// Showing error need to check.
-
 package in.vicky.main.controller;
 
 import java.io.IOException;
@@ -39,7 +37,7 @@ public class AdminController {
     @GetMapping("/users")
     public String viewUsers(HttpSession session, Model model) {
         if (session.getAttribute("admin") == null) {
-            return "redirect:/login"; // Force login if not admin
+            return "redirect:/login"; // user-login
         }
         model.addAttribute("users", userRepository.findAll());
         return "admin-users";
@@ -49,11 +47,10 @@ public class AdminController {
     // Show Add Candidate Form
     @GetMapping("/add-candidate")
     public String showCandidateForm(HttpSession session) {
-        // IMPORTANT: Always check session in Admin methods
         if (session.getAttribute("admin") == null) {
             return "redirect:/login"; 
         }
-        return "add-candidate"; // This must match add-candidate.html exactly
+        return "add-candidate"; 
     }
 
     // Process Candidate Addition with Photo
@@ -124,14 +121,13 @@ public class AdminController {
         }
 
         try {
-            // 2. Reset all Candidates' vote counts to 0
+            
             List<Candidate> candidates = candidateRepository.findAll();
             for (Candidate c : candidates) {
                 c.setVoteCount(0);
             }
             candidateRepository.saveAll(candidates);
 
-            // 3. Reset all Users' voting status so they can vote again
             List<User> users = userRepository.findAll();
             for (User u : users) {
                 u.setHasVoted(false);
@@ -143,8 +139,8 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "Reset failed: " + e.getMessage());
         }
 
-        // Redirect back to the results page to see the changes
         return "redirect:/admin/results";
     }
     
+
 }
