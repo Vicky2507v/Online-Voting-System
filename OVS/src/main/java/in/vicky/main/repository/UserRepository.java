@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    // This must match the method called in AuthController
+
     User findByEmail(String email); 
+
 }
