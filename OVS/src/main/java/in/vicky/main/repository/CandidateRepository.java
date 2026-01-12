@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
-    // JpaRepository provides all basic CRUD methods like save(), findAll(), etc.
+
 }
